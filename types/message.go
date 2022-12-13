@@ -108,11 +108,9 @@ func (m *Message) Serialize() ([]byte, error) {
 func (m Message) DecompileInstructions(getLookupTableEntries func(addressLookupTableKey common.PublicKey) ([]common.PublicKey, error)) ([]Instruction, error) {
 	switch m.Version {
 	case MessageVersionLegacy:
-		return m.decompileMessageInstructions(m.Accounts), nil
+		return m.decompileMessageInstructions(), nil
 	case MessageVersionV0:
-		messageAccounts := make([]common.PublicKey, len(m.Accounts))
 		tableAddressesMap := make(map[common.PublicKey][]common.PublicKey, len(m.AddressLookupTables))
-		copy(messageAccounts, m.Accounts)
 		for _, table := range m.AddressLookupTables {
 			tableAddresses, err := getLookupTableEntries(table.AccountKey)
 			tableAddressesMap[table.AccountKey] = tableAddresses
@@ -120,36 +118,36 @@ func (m Message) DecompileInstructions(getLookupTableEntries func(addressLookupT
 				return nil, fmt.Errorf("get lookup table %s entries: %w", table.AccountKey.ToBase58(), err)
 			}
 			for _, widx := range table.WritableIndexes {
-				messageAccounts = append(messageAccounts, tableAddresses[widx])
+				m.Accounts = append(m.Accounts, tableAddresses[widx])
 			}
 		}
 		for _, table := range m.AddressLookupTables {
+			tableAddresses := tableAddressesMap[table.AccountKey]
 			for _, ridx := range table.ReadonlyIndexes {
-				tableAddresses := tableAddressesMap[table.AccountKey]
-				messageAccounts = append(messageAccounts, tableAddresses[ridx])
+				m.Accounts = append(m.Accounts, tableAddresses[ridx])
 			}
 		}
-		return m.decompileMessageInstructions(messageAccounts), nil
+		return m.decompileMessageInstructions(), nil
 	default:
-		return m.decompileMessageInstructions(m.Accounts), nil
+		return m.decompileMessageInstructions(), nil
 	}
 }
 
-func (m Message) decompileMessageInstructions(messageAccounts []common.PublicKey) []Instruction {
+func (m Message) decompileMessageInstructions() []Instruction {
 	instructions := make([]Instruction, 0, len(m.Instructions))
 	for _, cins := range m.Instructions {
 		accounts := make([]AccountMeta, 0, len(cins.Accounts))
 		for i := 0; i < len(cins.Accounts); i++ {
 			accounts = append(accounts, AccountMeta{
-				PubKey:   messageAccounts[cins.Accounts[i]],
+				PubKey:   m.Accounts[cins.Accounts[i]],
 				IsSigner: cins.Accounts[i] < int(m.Header.NumRequireSignatures),
 				IsWritable: cins.Accounts[i] < int(m.Header.NumRequireSignatures-m.Header.NumReadonlySignedAccounts) ||
 					(cins.Accounts[i] >= int(m.Header.NumRequireSignatures) &&
-						cins.Accounts[i] < len(messageAccounts)-int(m.Header.NumReadonlyUnsignedAccounts)),
+						cins.Accounts[i] < len(m.Accounts)-int(m.Header.NumReadonlyUnsignedAccounts)),
 			})
 		}
 		instructions = append(instructions, Instruction{
-			ProgramID: messageAccounts[cins.ProgramIDIndex],
+			ProgramID: m.Accounts[cins.ProgramIDIndex],
 			Accounts:  accounts,
 			Data:      cins.Data,
 		})
