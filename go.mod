@@ -1,4 +1,4 @@
-module github.com/portto/solana-go-sdk
+module github.com/doesnotcommit/solana-go-sdk
 
 go 1.19
 
