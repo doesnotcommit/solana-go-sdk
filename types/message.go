@@ -105,33 +105,51 @@ func (m *Message) Serialize() ([]byte, error) {
 	return b, nil
 }
 
-// DecompileInstructions hasn't support v0 message decode
-func (m *Message) DecompileInstructions() []Instruction {
+func (m Message) DecompileInstructions(getLookupTableEntries func(addressLookupTableKeys common.PublicKey) ([]common.PublicKey, error)) ([]Instruction, error) {
 	switch m.Version {
 	case MessageVersionLegacy:
-		return m.decompileLegacyMessageInstructions()
+		return m.decompileMessageInstructions(m.Accounts), nil
 	case MessageVersionV0:
-		panic("hasn't supported")
+		messageAccounts := make([]common.PublicKey, len(m.Accounts))
+		tableAddressesMap := make(map[common.PublicKey][]common.PublicKey, len(m.AddressLookupTables))
+		copy(messageAccounts, m.Accounts)
+		for _, table := range m.AddressLookupTables {
+			tableAddresses, err := getLookupTableEntries(table.AccountKey)
+			tableAddressesMap[table.AccountKey] = tableAddresses
+			if err != nil {
+				return nil, fmt.Errorf("get lookup table %s entries: %w", table.AccountKey.ToBase58(), err)
+			}
+			for _, widx := range table.WritableIndexes {
+				messageAccounts = append(messageAccounts, tableAddresses[widx])
+			}
+		}
+		for _, table := range m.AddressLookupTables {
+			for _, ridx := range table.ReadonlyIndexes {
+				tableAddresses := tableAddressesMap[table.AccountKey]
+				messageAccounts = append(messageAccounts, tableAddresses[ridx])
+			}
+		}
+		return m.decompileMessageInstructions(messageAccounts), nil
 	default:
-		return m.decompileLegacyMessageInstructions()
+		return m.decompileMessageInstructions(m.Accounts), nil
 	}
 }
 
-func (m Message) decompileLegacyMessageInstructions() []Instruction {
+func (m Message) decompileMessageInstructions(messageAccounts []common.PublicKey) []Instruction {
 	instructions := make([]Instruction, 0, len(m.Instructions))
 	for _, cins := range m.Instructions {
 		accounts := make([]AccountMeta, 0, len(cins.Accounts))
 		for i := 0; i < len(cins.Accounts); i++ {
 			accounts = append(accounts, AccountMeta{
-				PubKey:   m.Accounts[cins.Accounts[i]],
+				PubKey:   messageAccounts[cins.Accounts[i]],
 				IsSigner: cins.Accounts[i] < int(m.Header.NumRequireSignatures),
 				IsWritable: cins.Accounts[i] < int(m.Header.NumRequireSignatures-m.Header.NumReadonlySignedAccounts) ||
 					(cins.Accounts[i] >= int(m.Header.NumRequireSignatures) &&
-						cins.Accounts[i] < len(m.Accounts)-int(m.Header.NumReadonlyUnsignedAccounts)),
+						cins.Accounts[i] < len(messageAccounts)-int(m.Header.NumReadonlyUnsignedAccounts)),
 			})
 		}
 		instructions = append(instructions, Instruction{
-			ProgramID: m.Accounts[cins.ProgramIDIndex],
+			ProgramID: messageAccounts[cins.ProgramIDIndex],
 			Accounts:  accounts,
 			Data:      cins.Data,
 		})
