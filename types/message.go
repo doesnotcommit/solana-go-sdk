@@ -105,7 +105,7 @@ func (m *Message) Serialize() ([]byte, error) {
 	return b, nil
 }
 
-func (m Message) DecompileInstructions(getLookupTableEntries func(addressLookupTableKeys common.PublicKey) ([]common.PublicKey, error)) ([]Instruction, error) {
+func (m Message) DecompileInstructions(getLookupTableEntries func(addressLookupTableKey common.PublicKey) ([]common.PublicKey, error)) ([]Instruction, error) {
 	switch m.Version {
 	case MessageVersionLegacy:
 		return m.decompileMessageInstructions(m.Accounts), nil
