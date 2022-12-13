@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/portto/solana-go-sdk/pkg/pointer"
+	"github.com/doesnotcommit/solana-go-sdk/pkg/pointer"
 )
 
 func TestGetSignaturesForAddress(t *testing.T) {

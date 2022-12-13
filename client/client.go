@@ -6,11 +6,11 @@ import (
 	"fmt"
 	"strconv"
 
+	"github.com/doesnotcommit/solana-go-sdk/common"
+	"github.com/doesnotcommit/solana-go-sdk/program/token"
+	"github.com/doesnotcommit/solana-go-sdk/rpc"
+	"github.com/doesnotcommit/solana-go-sdk/types"
 	"github.com/mr-tron/base58"
-	"github.com/portto/solana-go-sdk/common"
-	"github.com/portto/solana-go-sdk/program/token"
-	"github.com/portto/solana-go-sdk/rpc"
-	"github.com/portto/solana-go-sdk/types"
 )
 
 type Client struct {

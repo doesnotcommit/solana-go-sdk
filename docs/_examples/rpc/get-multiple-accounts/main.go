@@ -5,8 +5,8 @@ import (
 	"log"
 
 	"github.com/davecgh/go-spew/spew"
-	"github.com/portto/solana-go-sdk/client"
-	"github.com/portto/solana-go-sdk/rpc"
+	"github.com/doesnotcommit/solana-go-sdk/client"
+	"github.com/doesnotcommit/solana-go-sdk/rpc"
 )
 
 func main() {

@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"encoding/binary"
 
-	"github.com/portto/solana-go-sdk/common"
+	"github.com/doesnotcommit/solana-go-sdk/common"
 )
 
 var (

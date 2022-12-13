@@ -4,10 +4,10 @@ import (
 	"context"
 	"log"
 
-	"github.com/portto/solana-go-sdk/client"
-	"github.com/portto/solana-go-sdk/program/address_lookup_table"
-	"github.com/portto/solana-go-sdk/rpc"
-	"github.com/portto/solana-go-sdk/types"
+	"github.com/doesnotcommit/solana-go-sdk/client"
+	"github.com/doesnotcommit/solana-go-sdk/program/address_lookup_table"
+	"github.com/doesnotcommit/solana-go-sdk/rpc"
+	"github.com/doesnotcommit/solana-go-sdk/types"
 )
 
 // FUarP2p5EnxD66vVDL4PWRoWMzA56ZVHG24hpEDFShEz

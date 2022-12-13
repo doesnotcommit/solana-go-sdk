@@ -3,9 +3,9 @@ package main
 import (
 	"fmt"
 
+	"github.com/doesnotcommit/solana-go-sdk/pkg/hdwallet"
+	"github.com/doesnotcommit/solana-go-sdk/types"
 	"github.com/mr-tron/base58"
-	"github.com/portto/solana-go-sdk/pkg/hdwallet"
-	"github.com/portto/solana-go-sdk/types"
 	"github.com/tyler-smith/go-bip39"
 )
 

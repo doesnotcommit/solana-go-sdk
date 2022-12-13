@@ -10,11 +10,11 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/portto/solana-go-sdk/common"
-	"github.com/portto/solana-go-sdk/pkg/pointer"
-	"github.com/portto/solana-go-sdk/program/system"
-	"github.com/portto/solana-go-sdk/rpc"
-	"github.com/portto/solana-go-sdk/types"
+	"github.com/doesnotcommit/solana-go-sdk/common"
+	"github.com/doesnotcommit/solana-go-sdk/pkg/pointer"
+	"github.com/doesnotcommit/solana-go-sdk/program/system"
+	"github.com/doesnotcommit/solana-go-sdk/rpc"
+	"github.com/doesnotcommit/solana-go-sdk/types"
 	"github.com/stretchr/testify/assert"
 )
 
