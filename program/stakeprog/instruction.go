@@ -1,9 +1,9 @@
 package stakeprog
 
 import (
-	"github.com/portto/solana-go-sdk/common"
-	"github.com/portto/solana-go-sdk/pkg/bincode"
-	"github.com/portto/solana-go-sdk/types"
+	"github.com/doesnotcommit/solana-go-sdk/common"
+	"github.com/doesnotcommit/solana-go-sdk/pkg/bincode"
+	"github.com/doesnotcommit/solana-go-sdk/types"
 )
 
 const AccountSize uint64 = 200

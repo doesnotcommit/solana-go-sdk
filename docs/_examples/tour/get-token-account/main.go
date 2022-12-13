@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/portto/solana-go-sdk/client"
-	"github.com/portto/solana-go-sdk/program/token"
-	"github.com/portto/solana-go-sdk/rpc"
+	"github.com/doesnotcommit/solana-go-sdk/client"
+	"github.com/doesnotcommit/solana-go-sdk/program/token"
+	"github.com/doesnotcommit/solana-go-sdk/rpc"
 )
 
 func main() {

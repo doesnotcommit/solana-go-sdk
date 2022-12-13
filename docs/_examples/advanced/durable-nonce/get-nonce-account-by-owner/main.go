@@ -6,10 +6,10 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/portto/solana-go-sdk/client"
-	"github.com/portto/solana-go-sdk/common"
-	"github.com/portto/solana-go-sdk/program/system"
-	"github.com/portto/solana-go-sdk/rpc"
+	"github.com/doesnotcommit/solana-go-sdk/client"
+	"github.com/doesnotcommit/solana-go-sdk/common"
+	"github.com/doesnotcommit/solana-go-sdk/program/system"
+	"github.com/doesnotcommit/solana-go-sdk/rpc"
 )
 
 func main() {

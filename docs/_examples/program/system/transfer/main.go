@@ -4,11 +4,11 @@ import (
 	"context"
 	"log"
 
-	"github.com/portto/solana-go-sdk/client"
-	"github.com/portto/solana-go-sdk/common"
-	"github.com/portto/solana-go-sdk/program/system"
-	"github.com/portto/solana-go-sdk/rpc"
-	"github.com/portto/solana-go-sdk/types"
+	"github.com/doesnotcommit/solana-go-sdk/client"
+	"github.com/doesnotcommit/solana-go-sdk/common"
+	"github.com/doesnotcommit/solana-go-sdk/program/system"
+	"github.com/doesnotcommit/solana-go-sdk/rpc"
+	"github.com/doesnotcommit/solana-go-sdk/types"
 )
 
 // FUarP2p5EnxD66vVDL4PWRoWMzA56ZVHG24hpEDFShEz
