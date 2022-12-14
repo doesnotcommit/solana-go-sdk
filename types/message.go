@@ -105,27 +105,34 @@ func (m *Message) Serialize() ([]byte, error) {
 	return b, nil
 }
 
+func (m *Message) populateLookupTableAccounts(getLookupTableEntries func(addressLookupTableKey common.PublicKey) ([]common.PublicKey, error)) error {
+	tableAddressesMap := make(map[common.PublicKey][]common.PublicKey, len(m.AddressLookupTables))
+	for _, table := range m.AddressLookupTables {
+		tableAddresses, err := getLookupTableEntries(table.AccountKey)
+		tableAddressesMap[table.AccountKey] = tableAddresses
+		if err != nil {
+			return fmt.Errorf("get lookup table %s entries: %w", table.AccountKey.ToBase58(), err)
+		}
+		for _, widx := range table.WritableIndexes {
+			m.Accounts = append(m.Accounts, tableAddresses[widx])
+		}
+	}
+	for _, table := range m.AddressLookupTables {
+		tableAddresses := tableAddressesMap[table.AccountKey]
+		for _, ridx := range table.ReadonlyIndexes {
+			m.Accounts = append(m.Accounts, tableAddresses[ridx])
+		}
+	}
+	return nil
+}
+
 func (m *Message) DecompileInstructions(getLookupTableEntries func(addressLookupTableKey common.PublicKey) ([]common.PublicKey, error)) ([]Instruction, error) {
 	switch m.Version {
 	case MessageVersionLegacy:
 		return m.decompileMessageInstructions(), nil
 	case MessageVersionV0:
-		tableAddressesMap := make(map[common.PublicKey][]common.PublicKey, len(m.AddressLookupTables))
-		for _, table := range m.AddressLookupTables {
-			tableAddresses, err := getLookupTableEntries(table.AccountKey)
-			tableAddressesMap[table.AccountKey] = tableAddresses
-			if err != nil {
-				return nil, fmt.Errorf("get lookup table %s entries: %w", table.AccountKey.ToBase58(), err)
-			}
-			for _, widx := range table.WritableIndexes {
-				m.Accounts = append(m.Accounts, tableAddresses[widx])
-			}
-		}
-		for _, table := range m.AddressLookupTables {
-			tableAddresses := tableAddressesMap[table.AccountKey]
-			for _, ridx := range table.ReadonlyIndexes {
-				m.Accounts = append(m.Accounts, tableAddresses[ridx])
-			}
+		if err := m.populateLookupTableAccounts(getLookupTableEntries); err != nil {
+			return nil, fmt.Errorf("populate lookup table accounts: %w", err)
 		}
 		return m.decompileMessageInstructions(), nil
 	default:
