@@ -3,7 +3,7 @@ package client
 import (
 	"context"
 
-	"github.com/portto/solana-go-sdk/rpc"
+	"github.com/doesnotcommit/solana-go-sdk/rpc"
 )
 
 type GetTokenAccountBalanceConfig struct {

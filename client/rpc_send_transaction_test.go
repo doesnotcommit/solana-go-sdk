@@ -5,9 +5,9 @@ import (
 	"encoding/base64"
 	"testing"
 
-	"github.com/portto/solana-go-sdk/internal/client_test"
-	"github.com/portto/solana-go-sdk/rpc"
-	"github.com/portto/solana-go-sdk/types"
+	"github.com/doesnotcommit/solana-go-sdk/internal/client_test"
+	"github.com/doesnotcommit/solana-go-sdk/rpc"
+	"github.com/doesnotcommit/solana-go-sdk/types"
 )
 
 func TestClient_SendTransaction(t *testing.T) {

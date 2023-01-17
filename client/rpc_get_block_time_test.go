@@ -4,8 +4,8 @@ import (
 	"context"
 	"testing"
 
-	"github.com/portto/solana-go-sdk/internal/client_test"
-	"github.com/portto/solana-go-sdk/pkg/pointer"
+	"github.com/doesnotcommit/solana-go-sdk/internal/client_test"
+	"github.com/doesnotcommit/solana-go-sdk/pkg/pointer"
 )
 
 func TestClient_GetBlockTime(t *testing.T) {
@@ -13,7 +13,6 @@ func TestClient_GetBlockTime(t *testing.T) {
 	client_test.TestAll(
 		t,
 		[]client_test.Param{
-
 			{
 				RequestBody:  `{"jsonrpc":"2.0", "id":1, "method":"getBlockTime", "params":[85588104]}`,
 				ResponseBody: `{"jsonrpc":"2.0","result":1633531934,"id":1}`,

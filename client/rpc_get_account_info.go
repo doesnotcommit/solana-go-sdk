@@ -5,8 +5,8 @@ import (
 	"encoding/base64"
 	"fmt"
 
-	"github.com/portto/solana-go-sdk/common"
-	"github.com/portto/solana-go-sdk/rpc"
+	"github.com/doesnotcommit/solana-go-sdk/common"
+	"github.com/doesnotcommit/solana-go-sdk/rpc"
 )
 
 type AccountInfo struct {

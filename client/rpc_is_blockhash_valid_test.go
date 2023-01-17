@@ -4,8 +4,8 @@ import (
 	"context"
 	"testing"
 
-	"github.com/portto/solana-go-sdk/internal/client_test"
-	"github.com/portto/solana-go-sdk/rpc"
+	"github.com/doesnotcommit/solana-go-sdk/internal/client_test"
+	"github.com/doesnotcommit/solana-go-sdk/rpc"
 )
 
 func TestClient_IsBlockhashValid(t *testing.T) {
@@ -28,6 +28,7 @@ func TestClient_IsBlockhashValid(t *testing.T) {
 		},
 	)
 }
+
 func TestClient_IsBlockhashValidWithConfig(t *testing.T) {
 	client_test.TestAll(
 		t,

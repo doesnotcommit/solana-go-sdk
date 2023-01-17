@@ -3,7 +3,7 @@ package client
 import (
 	"context"
 
-	"github.com/portto/solana-go-sdk/rpc"
+	"github.com/doesnotcommit/solana-go-sdk/rpc"
 )
 
 // GetFirstAvailableBlock returns the slot of the lowest confirmed block that has not been purged from the ledger
