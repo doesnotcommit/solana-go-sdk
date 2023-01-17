@@ -95,7 +95,6 @@ func (m *Message) Serialize() ([]byte, error) {
 					validAddressLookupCount++
 				}
 			}
-
 		}
 
 		b = append(b, bincode.UintToVarLenBytes(uint64(validAddressLookupCount))...)
@@ -109,10 +108,10 @@ func (m *Message) populateLookupTableAccounts(getLookupTableEntries func(address
 	tableAddressesMap := make(map[common.PublicKey][]common.PublicKey, len(m.AddressLookupTables))
 	for _, table := range m.AddressLookupTables {
 		tableAddresses, err := getLookupTableEntries(table.AccountKey)
-		tableAddressesMap[table.AccountKey] = tableAddresses
 		if err != nil {
 			return fmt.Errorf("get lookup table %s entries: %w", table.AccountKey.ToBase58(), err)
 		}
+		tableAddressesMap[table.AccountKey] = tableAddresses
 		for _, widx := range table.WritableIndexes {
 			m.Accounts = append(m.Accounts, tableAddresses[widx])
 		}
