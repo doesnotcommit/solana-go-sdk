@@ -113,12 +113,18 @@ func (m *Message) populateLookupTableAccounts(getLookupTableEntries func(address
 		}
 		tableAddressesMap[table.AccountKey] = tableAddresses
 		for _, widx := range table.WritableIndexes {
+			if int(widx) >= len(tableAddresses) {
+				return fmt.Errorf("unexpected len of tableAddresses for table %s: got %d, want at least %d", table.AccountKey.ToBase58(), len(tableAddresses), widx+1)
+			}
 			m.Accounts = append(m.Accounts, tableAddresses[widx])
 		}
 	}
 	for _, table := range m.AddressLookupTables {
 		tableAddresses := tableAddressesMap[table.AccountKey]
 		for _, ridx := range table.ReadonlyIndexes {
+			if int(ridx) >= len(tableAddresses) {
+				return fmt.Errorf("unexpected len of tableAddresses for table %s: got %d, want at least %d", table.AccountKey.ToBase58(), len(tableAddresses), ridx+1)
+			}
 			m.Accounts = append(m.Accounts, tableAddresses[ridx])
 		}
 	}
