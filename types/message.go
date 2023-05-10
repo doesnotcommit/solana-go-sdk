@@ -104,6 +104,24 @@ func (m *Message) Serialize() ([]byte, error) {
 	return b, nil
 }
 
+type errStaleTableData struct {
+	tableAddr string
+	wantElems int
+	gotElems  int
+}
+
+func (e errStaleTableData) Error() string {
+	return fmt.Sprintf("address lookup table %s is likely stale. Expecting at least %d entries, got %d", e.tableAddr, e.wantElems, e.gotElems)
+}
+
+func (e errStaleTableData) TableIsStale() {}
+
+func newErrStaleTableData(tableAddr string, wantElems, gotElems int) errStaleTableData {
+	return errStaleTableData{
+		tableAddr, wantElems, gotElems,
+	}
+}
+
 func (m *Message) populateLookupTableAccounts(getLookupTableEntries func(addressLookupTableKey common.PublicKey) ([]common.PublicKey, error)) error {
 	tableAddressesMap := make(map[common.PublicKey][]common.PublicKey, len(m.AddressLookupTables))
 	for _, table := range m.AddressLookupTables {
@@ -114,7 +132,7 @@ func (m *Message) populateLookupTableAccounts(getLookupTableEntries func(address
 		tableAddressesMap[table.AccountKey] = tableAddresses
 		for _, widx := range table.WritableIndexes {
 			if int(widx) >= len(tableAddresses) {
-				return fmt.Errorf("unexpected len of tableAddresses for table %s: got %d, want at least %d", table.AccountKey.ToBase58(), len(tableAddresses), widx+1)
+				return newErrStaleTableData(table.AccountKey.ToBase58(), int(widx+1), len(tableAddresses))
 			}
 			m.Accounts = append(m.Accounts, tableAddresses[widx])
 		}
@@ -123,7 +141,7 @@ func (m *Message) populateLookupTableAccounts(getLookupTableEntries func(address
 		tableAddresses := tableAddressesMap[table.AccountKey]
 		for _, ridx := range table.ReadonlyIndexes {
 			if int(ridx) >= len(tableAddresses) {
-				return fmt.Errorf("unexpected len of tableAddresses for table %s: got %d, want at least %d", table.AccountKey.ToBase58(), len(tableAddresses), ridx+1)
+				return newErrStaleTableData(table.AccountKey.ToBase58(), int(ridx+1), len(tableAddresses))
 			}
 			m.Accounts = append(m.Accounts, tableAddresses[ridx])
 		}
